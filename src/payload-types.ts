@@ -65,7 +65,28 @@ export interface Config {
   auth: {
     users: UserAuthOperations;
   };
-  blocks: {};
+  blocks: {
+    content: ContentBlock;
+    imageBlock: ImageBlock;
+    featureSection: FeatureSection;
+    clientLogos: ClientLogosBlock;
+    solutionsList: SolutionsListBlock;
+    aiSupportSection: AiSupportSectionBlock;
+    supportNinjaSection: SupportNinjaSectionBlock;
+    textImageSection: TextImageSectionBlock;
+    approachTabs: ApproachTabs;
+    customizedApproach: CustomizedApproach;
+    caseStudySection: CaseStudySection;
+    templateSection: TemplateSection;
+    relatedTemplateSection: RelatedTemplateSection;
+    ctaSection: CtaSection;
+    newTemplatesSection: NewTemplatesSectionBlock;
+    productFeatures: ProductFeaturesBlock;
+    sectorsSection: SectorsSectionBlockPayload;
+    scheduleCallSection: ScheduleCallBlockPayload;
+    pricingPlans: PricingPlansBlock;
+    travelers: TravelersBlock;
+  };
   collections: {
     users: User;
     media: Media;
@@ -73,6 +94,7 @@ export interface Config {
     'web-pages': WebPage;
     'wiki-pages': WikiPage;
     'registry-pages': RegistryPage;
+    templates: Template;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -85,6 +107,7 @@ export interface Config {
     'web-pages': WebPagesSelect<false> | WebPagesSelect<true>;
     'wiki-pages': WikiPagesSelect<false> | WikiPagesSelect<true>;
     'registry-pages': RegistryPagesSelect<false> | RegistryPagesSelect<true>;
+    templates: TemplatesSelect<false> | TemplatesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -123,20 +146,40 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "ContentBlock".
  */
-export interface User {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
+export interface ContentBlock {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imageBlock".
+ */
+export interface ImageBlock {
+  image: string | Media;
+  caption?: string | null;
+  width?: ('100' | '75' | '50' | '25') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -156,6 +199,768 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureSection".
+ */
+export interface FeatureSection {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  superTitle?: string | null;
+  title: string;
+  /**
+   * Select the display style for the title. "Large" matches the homepage hero title size.
+   */
+  titleStyle?: ('standard' | 'large') | null;
+  description?: string | null;
+  image?: (string | null) | Media;
+  button?: {
+    text: string;
+    url: string;
+    style: 'primary' | 'secondary';
+  };
+  includeButton?: boolean | null;
+  /**
+   * Check this to remove the default bottom padding from this section.
+   */
+  removeBottomPadding?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ClientLogosBlock".
+ */
+export interface ClientLogosBlock {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  title?: string | null;
+  logos?:
+    | {
+        logo: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'clientLogos';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionsListBlock".
+ */
+export interface SolutionsListBlock {
+  title?: string | null;
+  description?: string | null;
+  /**
+   * Optional image displayed at the top right of the section.
+   */
+  sectionImage?: (string | null) | Media;
+  solutions?:
+    | {
+        /**
+         * Enter the exact name of a Phosphor icon (e.g., UsersThree, ChartLineUp). See phosphoricons.com for names. Case matters.
+         */
+        iconName: string;
+        solutionTitle: string;
+        solutionDescription: string;
+        link: {
+          text: string;
+          url: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  /**
+   * Removes all top padding for this section.
+   */
+  removeTopPadding?: boolean | null;
+  /**
+   * Removes all bottom padding for this section.
+   */
+  removeBottomPadding?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'solutionsList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AiSupportSectionBlock".
+ */
+export interface AiSupportSectionBlock {
+  title?: string | null;
+  description?: string | null;
+  benefits?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  link: {
+    text: string;
+    url: string;
+    style: 'primary' | 'secondary';
+  };
+  /**
+   * Optional. Enter the exact name of a Phosphor icon (e.g., CheckCircle, Check). See phosphoricons.com.
+   */
+  checkmarkIconName?: string | null;
+  characterImage?: (string | null) | Media;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  /**
+   * Determines if the character illustration appears on the left or right of the text content.
+   */
+  imagePosition?: ('right' | 'left') | null;
+  /**
+   * Reduces the standard top padding for this section by half.
+   */
+  reduceTopPadding?: boolean | null;
+  /**
+   * Reduces the standard bottom padding for this section by half.
+   */
+  reduceBottomPadding?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aiSupportSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupportNinjaSectionBlock".
+ */
+export interface SupportNinjaSectionBlock {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  title?: string | null;
+  description?: string | null;
+  image: string | Media;
+  ctaButton: {
+    text: string;
+    url: string;
+    style: 'primary' | 'secondary';
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'supportNinjaSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextImageSectionBlock".
+ */
+export interface TextImageSectionBlock {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  removeTopPadding?: boolean | null;
+  removeBottomPadding?: boolean | null;
+  title?: string | null;
+  /**
+   * Select the display style for the title. "Large" matches the homepage hero title size.
+   */
+  titleStyle?: ('standard' | 'large') | null;
+  description?: string | null;
+  image?: (string | null) | Media;
+  imagePosition: 'left' | 'right';
+  buttons?:
+    | {
+        text: string;
+        url: string;
+        style: 'primary' | 'secondary';
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textImageSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "approachTabs".
+ */
+export interface ApproachTabs {
+  title?: string | null;
+  tabs?:
+    | {
+        tabTitle: string;
+        /**
+         * Enter each step on a new line.
+         */
+        steps: string;
+        id?: string | null;
+      }[]
+    | null;
+  link?: {
+    text?: string | null;
+    url?: string | null;
+  };
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'approachTabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customizedApproach".
+ */
+export interface CustomizedApproach {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  title?: string | null;
+  description?: string | null;
+  approachTabsData: {
+    title?: string | null;
+    tabs?:
+      | {
+          tabTitle: string;
+          /**
+           * Enter each step on a new line.
+           */
+          steps: string;
+          id?: string | null;
+        }[]
+      | null;
+    link?: {
+      text?: string | null;
+      url?: string | null;
+    };
+    /**
+     * Select the background color.
+     */
+    sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+    /**
+     * Select the background color.
+     */
+    contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+    /**
+     * Select the maximum width for the content container within this block.
+     */
+    containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+    id?: string | null;
+    blockName?: string | null;
+    blockType: 'approachTabs';
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'customizedApproach';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "caseStudySection".
+ */
+export interface CaseStudySection {
+  title?: string | null;
+  caseStudies?:
+    | {
+        image: string | Media;
+        title: string;
+        link: string;
+        /**
+         * Optional: e.g., bg-blue-100. Leave blank for default (white).
+         */
+        bgColor?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  removeTopPadding?: boolean | null;
+  removeBottomPadding?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'caseStudySection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templateSection".
+ */
+export interface TemplateSection {
+  title?: string | null;
+  description?: string | null;
+  topLink?: {
+    text?: string | null;
+    url?: string | null;
+  };
+  templates?:
+    | {
+        image: string | Media;
+        title: string;
+        link: string;
+        /**
+         * e.g., bg-red-100, bg-blue-100. Use light shades.
+         */
+        bgColor?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'templateSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "relatedTemplateSection".
+ */
+export interface RelatedTemplateSection {
+  title?: string | null;
+  topLink?: {
+    text?: string | null;
+    url?: string | null;
+  };
+  relatedTemplates?:
+    | {
+        image: string | Media;
+        title: string;
+        description?: string | null;
+        link: string;
+        /**
+         * e.g., bg-orange-100, bg-green-100. Use light shades.
+         */
+        bgColor?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'relatedTemplateSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ctaSection".
+ */
+export interface CtaSection {
+  ctaSubTitle?: string | null;
+  ctaTitle?: string | null;
+  ctaButtons?:
+    | {
+        text: string;
+        url: string;
+        style?: ('primary' | 'secondary') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewTemplatesSectionBlock".
+ */
+export interface NewTemplatesSectionBlock {
+  content: {
+    superTitle?: string | null;
+    title?: string | null;
+    description: string;
+    ctaText?: string | null;
+    ctaUrl?: string | null;
+  };
+  /**
+   * Select the templates to show in this section.
+   */
+  templates: (string | Template)[];
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newTemplatesSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export interface Template {
+  id: string;
+  title: string;
+  /**
+   * A unique identifier for the page, used in the URL.
+   */
+  slug: string;
+  href?: string | null;
+  category?: string | null;
+  image?: (string | null) | Media;
+  /**
+   * E.g., "FileText", "ChartLineUp". Used if no image is provided or as an alternative display.
+   */
+  iconName?: string | null;
+  /**
+   * e.g., bg-red-200, bg-white. Default is bg-white.
+   */
+  backgroundColor?: string | null;
+  hasBorder?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductFeaturesBlock".
+ */
+export interface ProductFeaturesBlock {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  imageColumnBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  features: {
+    title: string;
+    description?: string | null;
+    /**
+     * Image displayed when this feature is selected.
+     */
+    image: string | Media;
+    id?: string | null;
+  }[];
+  /**
+   * Image displayed initially before any feature is selected.
+   */
+  defaultImage: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productFeatures';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectorsSectionBlockPayload".
+ */
+export interface SectorsSectionBlockPayload {
+  /**
+   * Controls the overall background color of the section.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Controls the background color of the inner content area (within padding).
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Sets the maximum width of the content container.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  content?: {
+    superTitle?: string | null;
+    title?: string | null;
+    description?: string | null;
+    ctaText?: string | null;
+    ctaUrl?: string | null;
+  };
+  sectors?:
+    | {
+        title: string;
+        image?: (string | null) | Media;
+        /**
+         * Enter the name of the icon to display (if image is not used or as an overlay).
+         */
+        iconName?: string | null;
+        /**
+         * Select a background color for the sector card.
+         */
+        backgroundColor?:
+          | (
+              | 'white'
+              | 'default'
+              | 'default-gradient'
+              | 'primary-25'
+              | 'primary-50'
+              | 'primary-100'
+              | 'primary-200'
+              | 'primary-300'
+              | 'primary-400'
+              | 'primary-500'
+              | 'primary-600'
+              | 'primary-700'
+              | 'primary-800'
+              | 'primary-900'
+              | 'primary-950'
+              | 'sand'
+              | 'pink-light'
+              | 'coral-light'
+              | 'pink-mid'
+              | 'purple-light'
+              | 'blue-light'
+              | 'aqua-light'
+              | 'green-light'
+              | 'light-green'
+              | 'grass-light'
+              | 'light-grey'
+              | 'navy-dark'
+            )
+          | null;
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectorsSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ScheduleCallBlockPayload".
+ */
+export interface ScheduleCallBlockPayload {
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  reduceTopPadding?: boolean | null;
+  reduceBottomPadding?: boolean | null;
+  infoColumn?: {
+    infoColumnLogo?: (string | null) | Media;
+    infoColumnHeaderLink?: {
+      text?: string | null;
+      url?: string | null;
+    };
+    infoColumnMainTitlePart1?: string | null;
+    infoColumnMainTitlePart2?: string | null;
+    /**
+     * CSS height value like "h-20", "auto", or "80px".
+     */
+    infoColumnTitleContainerDesktopHeight?: string | null;
+    infoColumnFooterText?: string | null;
+    infoColumnFooterLinks?:
+      | {
+          text: string;
+          url: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  formColumn?: {
+    formTitle?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'scheduleCallSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingPlansBlock".
+ */
+export interface PricingPlansBlock {
+  title?: string | null;
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  removeTopPadding?: boolean | null;
+  removeBottomPadding?: boolean | null;
+  plans?:
+    | {
+        name: string;
+        description?: string | null;
+        monthlyPrice?: string | null;
+        annualPrice?: string | null;
+        priceSuffix?: string | null;
+        /**
+         * Select a background color for this plan card. Ensure the Tailwind class exists.
+         */
+        cardBackgroundColor?: ('bg-white' | 'bg-light-grey' | 'bg-sand' | 'bg-brand-50') | null;
+        ctaButtonLabel?: string | null;
+        ctaButtonLink?: string | null;
+        isMostPopular?: boolean | null;
+        features?:
+          | {
+              featureText: string;
+              isIncluded?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pricingPlans';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TravelersBlock".
+ */
+export interface TravelersBlock {
+  /**
+   * Select the background color.
+   */
+  sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the background color.
+   */
+  contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+  /**
+   * Select the maximum width for the content container within this block.
+   */
+  containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+  removeTopPadding?: boolean | null;
+  removeBottomPadding?: boolean | null;
+  title?: string | null;
+  /**
+   * Select the display style for the title. "Large" matches the homepage hero title size.
+   */
+  titleStyle?: ('standard' | 'large') | null;
+  description?: string | null;
+  buttons?:
+    | {
+        text: string;
+        url: string;
+        style: 'primary' | 'secondary';
+        id?: string | null;
+      }[]
+    | null;
+  tabsFeature?:
+    | {
+        tabTitle: string;
+        tabContent: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'travelers';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 /**
  * Organize pages into hierarchical categories.
@@ -217,33 +1022,232 @@ export interface WebPage {
      */
     keywords?: string | null;
   };
-  layout: ContentBlock[];
+  layout: (
+    | ContentBlock
+    | {
+        image: string | Media;
+        caption?: string | null;
+        width?: ('100' | '75' | '50' | '25') | null;
+        alignment?: ('left' | 'center' | 'right') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'imageBlock';
+      }
+    | FeatureSection
+    | ClientLogosBlock
+    | SolutionsListBlock
+    | AiSupportSectionBlock
+    | SupportNinjaSectionBlock
+    | TextImageSectionBlock
+    | {
+        title?: string | null;
+        tabs?:
+          | {
+              tabTitle: string;
+              /**
+               * Enter each step on a new line.
+               */
+              steps: string;
+              id?: string | null;
+            }[]
+          | null;
+        link?: {
+          text?: string | null;
+          url?: string | null;
+        };
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the background color.
+         */
+        contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'approachTabs';
+      }
+    | {
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the background color.
+         */
+        contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        title?: string | null;
+        description?: string | null;
+        approachTabsData: {
+          title?: string | null;
+          tabs?:
+            | {
+                tabTitle: string;
+                /**
+                 * Enter each step on a new line.
+                 */
+                steps: string;
+                id?: string | null;
+              }[]
+            | null;
+          link?: {
+            text?: string | null;
+            url?: string | null;
+          };
+          /**
+           * Select the background color.
+           */
+          sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+          /**
+           * Select the background color.
+           */
+          contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+          /**
+           * Select the maximum width for the content container within this block.
+           */
+          containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+          id?: string | null;
+          blockName?: string | null;
+          blockType: 'approachTabs';
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'customizedApproach';
+      }
+    | {
+        title?: string | null;
+        caseStudies?:
+          | {
+              image: string | Media;
+              title: string;
+              link: string;
+              /**
+               * Optional: e.g., bg-blue-100. Leave blank for default (white).
+               */
+              bgColor?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        removeTopPadding?: boolean | null;
+        removeBottomPadding?: boolean | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'caseStudySection';
+      }
+    | {
+        title?: string | null;
+        description?: string | null;
+        topLink?: {
+          text?: string | null;
+          url?: string | null;
+        };
+        templates?:
+          | {
+              image: string | Media;
+              title: string;
+              link: string;
+              /**
+               * e.g., bg-red-100, bg-blue-100. Use light shades.
+               */
+              bgColor?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'templateSection';
+      }
+    | {
+        title?: string | null;
+        topLink?: {
+          text?: string | null;
+          url?: string | null;
+        };
+        relatedTemplates?:
+          | {
+              image: string | Media;
+              title: string;
+              description?: string | null;
+              link: string;
+              /**
+               * e.g., bg-orange-100, bg-green-100. Use light shades.
+               */
+              bgColor?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'relatedTemplateSection';
+      }
+    | {
+        ctaSubTitle?: string | null;
+        ctaTitle?: string | null;
+        ctaButtons?:
+          | {
+              text: string;
+              url: string;
+              style?: ('primary' | 'secondary') | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Select the background color.
+         */
+        sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the background color.
+         */
+        contentBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
+        /**
+         * Select the maximum width for the content container within this block.
+         */
+        containerWidth?: ('default' | 'medium' | 'wide' | 'full') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'ctaSection';
+      }
+    | NewTemplatesSectionBlock
+    | ProductFeaturesBlock
+    | SectorsSectionBlockPayload
+    | ScheduleCallBlockPayload
+    | PricingPlansBlock
+    | TravelersBlock
+  )[];
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock".
- */
-export interface ContentBlock {
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'content';
 }
 /**
  * Pages for the wiki section.
@@ -397,6 +1401,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registry-pages';
         value: string | RegistryPage;
+      } | null)
+    | ({
+        relationTo: 'templates';
+        value: string | Template;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -506,6 +1514,178 @@ export interface WebPagesSelect<T extends boolean = true> {
     | T
     | {
         content?: T | ContentBlockSelect<T>;
+        imageBlock?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
+              width?: T;
+              alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        featureSection?: T | FeatureSectionSelect<T>;
+        clientLogos?: T | ClientLogosBlockSelect<T>;
+        solutionsList?: T | SolutionsListBlockSelect<T>;
+        aiSupportSection?: T | AiSupportSectionBlockSelect<T>;
+        supportNinjaSection?: T | SupportNinjaSectionBlockSelect<T>;
+        textImageSection?: T | TextImageSectionBlockSelect<T>;
+        approachTabs?:
+          | T
+          | {
+              title?: T;
+              tabs?:
+                | T
+                | {
+                    tabTitle?: T;
+                    steps?: T;
+                    id?: T;
+                  };
+              link?:
+                | T
+                | {
+                    text?: T;
+                    url?: T;
+                  };
+              sectionBackgroundColor?: T;
+              contentBackgroundColor?: T;
+              containerWidth?: T;
+              id?: T;
+              blockName?: T;
+            };
+        customizedApproach?:
+          | T
+          | {
+              sectionBackgroundColor?: T;
+              contentBackgroundColor?: T;
+              containerWidth?: T;
+              title?: T;
+              description?: T;
+              approachTabsData?:
+                | T
+                | {
+                    approachTabs?:
+                      | T
+                      | {
+                          title?: T;
+                          tabs?:
+                            | T
+                            | {
+                                tabTitle?: T;
+                                steps?: T;
+                                id?: T;
+                              };
+                          link?:
+                            | T
+                            | {
+                                text?: T;
+                                url?: T;
+                              };
+                          sectionBackgroundColor?: T;
+                          contentBackgroundColor?: T;
+                          containerWidth?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        caseStudySection?:
+          | T
+          | {
+              title?: T;
+              caseStudies?:
+                | T
+                | {
+                    image?: T;
+                    title?: T;
+                    link?: T;
+                    bgColor?: T;
+                    id?: T;
+                  };
+              sectionBackgroundColor?: T;
+              containerWidth?: T;
+              removeTopPadding?: T;
+              removeBottomPadding?: T;
+              id?: T;
+              blockName?: T;
+            };
+        templateSection?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              topLink?:
+                | T
+                | {
+                    text?: T;
+                    url?: T;
+                  };
+              templates?:
+                | T
+                | {
+                    image?: T;
+                    title?: T;
+                    link?: T;
+                    bgColor?: T;
+                    id?: T;
+                  };
+              sectionBackgroundColor?: T;
+              containerWidth?: T;
+              id?: T;
+              blockName?: T;
+            };
+        relatedTemplateSection?:
+          | T
+          | {
+              title?: T;
+              topLink?:
+                | T
+                | {
+                    text?: T;
+                    url?: T;
+                  };
+              relatedTemplates?:
+                | T
+                | {
+                    image?: T;
+                    title?: T;
+                    description?: T;
+                    link?: T;
+                    bgColor?: T;
+                    id?: T;
+                  };
+              sectionBackgroundColor?: T;
+              containerWidth?: T;
+              id?: T;
+              blockName?: T;
+            };
+        ctaSection?:
+          | T
+          | {
+              ctaSubTitle?: T;
+              ctaTitle?: T;
+              ctaButtons?:
+                | T
+                | {
+                    text?: T;
+                    url?: T;
+                    style?: T;
+                    id?: T;
+                  };
+              sectionBackgroundColor?: T;
+              contentBackgroundColor?: T;
+              containerWidth?: T;
+              id?: T;
+              blockName?: T;
+            };
+        newTemplatesSection?: T | NewTemplatesSectionBlockSelect<T>;
+        productFeatures?: T | ProductFeaturesBlockSelect<T>;
+        sectorsSection?: T | SectorsSectionBlockPayloadSelect<T>;
+        scheduleCallSection?: T | ScheduleCallBlockPayloadSelect<T>;
+        pricingPlans?: T | PricingPlansBlockSelect<T>;
+        travelers?: T | TravelersBlockSelect<T>;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -516,6 +1696,332 @@ export interface WebPagesSelect<T extends boolean = true> {
  */
 export interface ContentBlockSelect<T extends boolean = true> {
   content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureSection_select".
+ */
+export interface FeatureSectionSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  superTitle?: T;
+  title?: T;
+  titleStyle?: T;
+  description?: T;
+  image?: T;
+  button?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        style?: T;
+      };
+  includeButton?: T;
+  removeBottomPadding?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ClientLogosBlock_select".
+ */
+export interface ClientLogosBlockSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  title?: T;
+  logos?:
+    | T
+    | {
+        logo?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionsListBlock_select".
+ */
+export interface SolutionsListBlockSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  sectionImage?: T;
+  solutions?:
+    | T
+    | {
+        iconName?: T;
+        solutionTitle?: T;
+        solutionDescription?: T;
+        link?:
+          | T
+          | {
+              text?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  removeTopPadding?: T;
+  removeBottomPadding?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AiSupportSectionBlock_select".
+ */
+export interface AiSupportSectionBlockSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  benefits?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  link?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        style?: T;
+      };
+  checkmarkIconName?: T;
+  characterImage?: T;
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  imagePosition?: T;
+  reduceTopPadding?: T;
+  reduceBottomPadding?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupportNinjaSectionBlock_select".
+ */
+export interface SupportNinjaSectionBlockSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  title?: T;
+  description?: T;
+  image?: T;
+  ctaButton?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        style?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextImageSectionBlock_select".
+ */
+export interface TextImageSectionBlockSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  removeTopPadding?: T;
+  removeBottomPadding?: T;
+  title?: T;
+  titleStyle?: T;
+  description?: T;
+  image?: T;
+  imagePosition?: T;
+  buttons?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        style?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewTemplatesSectionBlock_select".
+ */
+export interface NewTemplatesSectionBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        superTitle?: T;
+        title?: T;
+        description?: T;
+        ctaText?: T;
+        ctaUrl?: T;
+      };
+  templates?: T;
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductFeaturesBlock_select".
+ */
+export interface ProductFeaturesBlockSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  imageColumnBackgroundColor?: T;
+  containerWidth?: T;
+  features?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        id?: T;
+      };
+  defaultImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectorsSectionBlockPayload_select".
+ */
+export interface SectorsSectionBlockPayloadSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  content?:
+    | T
+    | {
+        superTitle?: T;
+        title?: T;
+        description?: T;
+        ctaText?: T;
+        ctaUrl?: T;
+      };
+  sectors?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        iconName?: T;
+        backgroundColor?: T;
+        href?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ScheduleCallBlockPayload_select".
+ */
+export interface ScheduleCallBlockPayloadSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  containerWidth?: T;
+  reduceTopPadding?: T;
+  reduceBottomPadding?: T;
+  infoColumn?:
+    | T
+    | {
+        infoColumnLogo?: T;
+        infoColumnHeaderLink?:
+          | T
+          | {
+              text?: T;
+              url?: T;
+            };
+        infoColumnMainTitlePart1?: T;
+        infoColumnMainTitlePart2?: T;
+        infoColumnTitleContainerDesktopHeight?: T;
+        infoColumnFooterText?: T;
+        infoColumnFooterLinks?:
+          | T
+          | {
+              text?: T;
+              url?: T;
+              id?: T;
+            };
+      };
+  formColumn?:
+    | T
+    | {
+        formTitle?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingPlansBlock_select".
+ */
+export interface PricingPlansBlockSelect<T extends boolean = true> {
+  title?: T;
+  sectionBackgroundColor?: T;
+  removeTopPadding?: T;
+  removeBottomPadding?: T;
+  plans?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        monthlyPrice?: T;
+        annualPrice?: T;
+        priceSuffix?: T;
+        cardBackgroundColor?: T;
+        ctaButtonLabel?: T;
+        ctaButtonLink?: T;
+        isMostPopular?: T;
+        features?:
+          | T
+          | {
+              featureText?: T;
+              isIncluded?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TravelersBlock_select".
+ */
+export interface TravelersBlockSelect<T extends boolean = true> {
+  sectionBackgroundColor?: T;
+  contentBackgroundColor?: T;
+  containerWidth?: T;
+  removeTopPadding?: T;
+  removeBottomPadding?: T;
+  title?: T;
+  titleStyle?: T;
+  description?: T;
+  buttons?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        style?: T;
+        id?: T;
+      };
+  tabsFeature?:
+    | T
+    | {
+        tabTitle?: T;
+        tabContent?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -578,6 +2084,22 @@ export interface RegistryPagesSelect<T extends boolean = true> {
   isSectionHomepage?: T;
   parent?: T;
   icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates_select".
+ */
+export interface TemplatesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  href?: T;
+  category?: T;
+  image?: T;
+  iconName?: T;
+  backgroundColor?: T;
+  hasBorder?: T;
   updatedAt?: T;
   createdAt?: T;
 }

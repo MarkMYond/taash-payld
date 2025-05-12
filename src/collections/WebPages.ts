@@ -1,7 +1,51 @@
 import type { CollectionConfig } from 'payload';
 import { slugField } from '../fields/slug';
 import { seoField } from '../fields/seo';
+
+// Import Blocks
 import ContentBlock from '../blocks/ContentBlock'; // Default import
+import { ImageBlock } from '../blocks/ImageBlock';
+import { FeatureSectionBlock } from '../blocks/FeatureSectionBlock';
+import { ClientLogosBlock } from '../blocks/ClientLogosBlock';
+import { SolutionsListBlock } from '../blocks/SolutionsListBlock';
+import { AiSupportSectionBlock } from '../blocks/AiSupportSectionBlock';
+import { SupportNinjaSectionBlock } from '../blocks/SupportNinjaSectionBlock';
+import { TextImageSectionBlock } from '../blocks/TextImageSectionBlock';
+import { ApproachTabsBlock } from '../blocks/ApproachTabsBlock';
+import { CustomizedApproachBlock } from '../blocks/CustomizedApproachBlock';
+import { CaseStudySectionBlock } from '../blocks/CaseStudySectionBlock';
+import { TemplateSectionBlock } from '../blocks/TemplateSectionBlock';
+import { RelatedTemplateSectionBlock } from '../blocks/RelatedTemplateSectionBlock';
+import { CtaSectionBlock } from '../blocks/CtaSectionBlock';
+import { NewTemplatesSectionBlock } from '../blocks/NewTemplatesSectionBlock';
+import { ProductFeaturesBlock } from '../blocks/ProductFeaturesBlock';
+import { SectorsSectionBlock } from '../blocks/SectorsSectionBlock';
+import { ScheduleCallBlock } from '../blocks/ScheduleCallBlock';
+import { PricingPlansBlock } from '../blocks/PricingPlansBlock';
+import { TravelersBlock } from '../blocks/TravelersBlock';
+
+const AllWebPageBlocks = [
+  ContentBlock,
+  ImageBlock,
+  FeatureSectionBlock,
+  ClientLogosBlock,
+  SolutionsListBlock,
+  AiSupportSectionBlock,
+  SupportNinjaSectionBlock,
+  TextImageSectionBlock,
+  ApproachTabsBlock,
+  CustomizedApproachBlock,
+  CaseStudySectionBlock,
+  TemplateSectionBlock,
+  RelatedTemplateSectionBlock,
+  CtaSectionBlock,
+  NewTemplatesSectionBlock,
+  ProductFeaturesBlock,
+  SectorsSectionBlock,
+  ScheduleCallBlock,
+  PricingPlansBlock,
+  TravelersBlock,
+];
 
 const WebPages: CollectionConfig = {
   slug: 'web-pages',
@@ -37,7 +81,7 @@ const WebPages: CollectionConfig = {
       label: 'Page Layout',
       type: 'blocks',
       minRows: 1,
-      blocks: [ContentBlock], // Only allow the simple ContentBlock
+      blocks: AllWebPageBlocks,
       required: true,
     },
   ],

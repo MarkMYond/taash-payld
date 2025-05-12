@@ -17,6 +17,52 @@ import Categories from './collections/Categories'
 import WebPages from './collections/WebPages'
 import WikiPages from './collections/WikiPages'
 import RegistryPages from './collections/RegistryPages'
+import { Templates } from './collections/Templates' // Added import
+
+// Import Blocks
+import ContentBlock from './blocks/ContentBlock';
+import { ImageBlock } from './blocks/ImageBlock';
+import { FeatureSectionBlock } from './blocks/FeatureSectionBlock';
+import { ClientLogosBlock } from './blocks/ClientLogosBlock';
+import { SolutionsListBlock } from './blocks/SolutionsListBlock';
+import { AiSupportSectionBlock } from './blocks/AiSupportSectionBlock';
+import { SupportNinjaSectionBlock } from './blocks/SupportNinjaSectionBlock';
+import { TextImageSectionBlock } from './blocks/TextImageSectionBlock';
+import { ApproachTabsBlock } from './blocks/ApproachTabsBlock';
+import { CustomizedApproachBlock } from './blocks/CustomizedApproachBlock';
+import { CaseStudySectionBlock } from './blocks/CaseStudySectionBlock';
+import { TemplateSectionBlock } from './blocks/TemplateSectionBlock';
+import { RelatedTemplateSectionBlock } from './blocks/RelatedTemplateSectionBlock';
+import { CtaSectionBlock } from './blocks/CtaSectionBlock';
+import { NewTemplatesSectionBlock } from './blocks/NewTemplatesSectionBlock';
+import { ProductFeaturesBlock } from './blocks/ProductFeaturesBlock';
+import { SectorsSectionBlock } from './blocks/SectorsSectionBlock';
+import { ScheduleCallBlock } from './blocks/ScheduleCallBlock';
+import { PricingPlansBlock } from './blocks/PricingPlansBlock';
+import { TravelersBlock } from './blocks/TravelersBlock';
+
+const AllBlocks = [
+  ContentBlock,
+  ImageBlock,
+  FeatureSectionBlock,
+  ClientLogosBlock,
+  SolutionsListBlock,
+  AiSupportSectionBlock,
+  SupportNinjaSectionBlock,
+  TextImageSectionBlock,
+  ApproachTabsBlock,
+  CustomizedApproachBlock,
+  CaseStudySectionBlock,
+  TemplateSectionBlock,
+  RelatedTemplateSectionBlock,
+  CtaSectionBlock,
+  NewTemplatesSectionBlock,
+  ProductFeaturesBlock,
+  SectorsSectionBlock,
+  ScheduleCallBlock,
+  PricingPlansBlock,
+  TravelersBlock,
+];
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,8 +74,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages],
+  collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, Templates], // Added Templates
   editor: lexicalEditor(),
+  blocks: AllBlocks, // Added all blocks
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
