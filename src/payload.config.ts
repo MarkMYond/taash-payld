@@ -76,7 +76,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    // favicon is not a valid property in admin config
+    // favicon is not a valid property in admin config - removed to fix build error
   },
   collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, Templates], // Added Templates
   globals: [Footer], // Add the Footer global
