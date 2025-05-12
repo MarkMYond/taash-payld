@@ -1,7 +1,27 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig, CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload';
+import { generateWikiNavigation } from '../hooks/generateWikiNavigation';
 import { slugField } from '../fields/slug';
 import { seoField } from '../fields/seo';
 import ContentBlock from '../blocks/ContentBlock'; // Default import
+
+// After change/delete hooks to regenerate the wiki navigation
+const afterChangeHook: CollectionAfterChangeHook = async ({ req }) => {
+  console.log('Wiki page changed, regenerating navigation...');
+  try {
+    await generateWikiNavigation(req.payload);
+  } catch (error) {
+    console.error('Error regenerating wiki navigation after change:', error);
+  }
+};
+
+const afterDeleteHook: CollectionAfterDeleteHook = async ({ req }) => {
+  console.log('Wiki page deleted, regenerating navigation...');
+  try {
+    await generateWikiNavigation(req.payload);
+  } catch (error) {
+    console.error('Error regenerating wiki navigation after delete:', error);
+  }
+};
 
 const WikiPages: CollectionConfig = {
   slug: 'wiki-pages',
@@ -157,7 +177,11 @@ const WikiPages: CollectionConfig = {
     },
   ],
   timestamps: true,
-  versions: false, 
+  versions: false,
+  hooks: {
+    afterChange: [afterChangeHook],
+    afterDelete: [afterDeleteHook],
+  },
 };
 
 export default WikiPages;
