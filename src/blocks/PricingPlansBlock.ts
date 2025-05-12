@@ -28,6 +28,28 @@ export const PricingPlansBlock: Block = {
       defaultValue: 'Plans for every stage of your company',
     },
     {
+      name: 'mainCtaText',
+      label: 'Main CTA Button Text',
+      type: 'text',
+      defaultValue: 'Get Started',
+    },
+    {
+      name: 'mainCtaLink',
+      label: 'Main CTA Button Link',
+      type: 'text',
+      defaultValue: '/contact-us',
+    },
+    {
+      name: 'mainCtaStyle',
+      label: 'Main CTA Button Style',
+      type: 'select',
+      options: [
+        { label: 'Primary', value: 'primary' },
+        { label: 'Secondary', value: 'secondary' },
+      ],
+      defaultValue: 'primary',
+    },
+    {
       name: 'sectionBackgroundColor',
       label: 'Section Background Color',
       type: 'select',
