@@ -1,7 +1,27 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig, CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload';
+import { generateRegistryNavigation } from '../hooks/generateRegistryNavigation';
 import { slugField } from '../fields/slug';
 import { seoField } from '../fields/seo';
 import ContentBlock from '../blocks/ContentBlock'; // Default import
+
+// After change/delete hooks to regenerate the registry navigation
+const afterChangeHook: CollectionAfterChangeHook = async ({ req }) => {
+  console.log('Registry page changed, regenerating navigation...');
+  try {
+    await generateRegistryNavigation(req.payload);
+  } catch (error) {
+    console.error('Error regenerating registry navigation after change:', error);
+  }
+};
+
+const afterDeleteHook: CollectionAfterDeleteHook = async ({ req }) => {
+  console.log('Registry page deleted, regenerating navigation...');
+  try {
+    await generateRegistryNavigation(req.payload);
+  } catch (error) {
+    console.error('Error regenerating registry navigation after delete:', error);
+  }
+};
 
 const RegistryPages: CollectionConfig = {
   slug: 'registry-pages',
@@ -157,7 +177,11 @@ const RegistryPages: CollectionConfig = {
     },
   ],
   timestamps: true,
-  versions: false, 
+  versions: false,
+  hooks: {
+    afterChange: [afterChangeHook],
+    afterDelete: [afterDeleteHook],
+  },
 };
 
 export default RegistryPages;
