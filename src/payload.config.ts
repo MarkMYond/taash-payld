@@ -60,11 +60,13 @@ export default buildConfig({
   cors: [
     'http://localhost:3000', // Nuxt frontend
     process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
+    'https://taash-payld.vercel.app',
     // Add your Vercel deployment URLs here for production if needed
   ],
   csrf: [
     'http://localhost:3000', // Nuxt frontend
     process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
+    'https://taash-payld.vercel.app',
     // Add your Vercel deployment URLs here for production if needed
   ],
 })
