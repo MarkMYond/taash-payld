@@ -943,10 +943,48 @@ export interface TravelersBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * This text will be suggested as a starting prompt across all tabs
+   */
+  defaultConversationStarter?: string | null;
+  /**
+   * Add up to 5 conversation tabs
+   */
   tabsFeature?:
     | {
         tabTitle: string;
+        /**
+         * Image to display with the tab description (before chat is activated)
+         */
+        tabImage?: (string | null) | Media;
+        /**
+         * Introductory text displayed at the top of the tab
+         */
         tabContent: string;
+        /**
+         * This will appear as if the user has already asked this question
+         */
+        initialUserMessage: string;
+        /**
+         * This will appear as the AI's response to the initial user message
+         */
+        initialAIResponse: string;
+        /**
+         * Which AI model to use for this tab
+         */
+        modelName: 'gemini-flash-2.0' | 'gemini-2.5-flash-preview-04-17';
+        /**
+         * Instructions for how the AI should behave in this tab (not visible to users)
+         */
+        systemPrompt: string;
+        /**
+         * Name of the AI assistant in this tab
+         */
+        avatarName?: string | null;
+        /**
+         * Optional profile image for the AI assistant
+         */
+        avatarImage?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -2132,11 +2170,19 @@ export interface TravelersBlockSelect<T extends boolean = true> {
         style?: T;
         id?: T;
       };
+  defaultConversationStarter?: T;
   tabsFeature?:
     | T
     | {
         tabTitle?: T;
+        tabImage?: T;
         tabContent?: T;
+        initialUserMessage?: T;
+        initialAIResponse?: T;
+        modelName?: T;
+        systemPrompt?: T;
+        avatarName?: T;
+        avatarImage?: T;
         id?: T;
       };
   id?: T;
