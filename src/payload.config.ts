@@ -76,6 +76,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    favicon: '/favicon.svg',
   },
   collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, Templates], // Added Templates
   globals: [Footer], // Add the Footer global
