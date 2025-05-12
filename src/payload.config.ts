@@ -1,0 +1,70 @@
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
+import { buildConfig } from 'payload'
+import { fileURLToPath } from 'url'
+import sharp from 'sharp'
+
+// Import the cloud storage plugin
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+// Import our custom adapter for DigitalOcean Spaces
+import { createDigitalOceanAdapter } from './lib/digitalOceanAdapter'
+
+import { Users } from './collections/Users'
+import { Media } from './collections/Media'
+import Categories from './collections/Categories'
+import WebPages from './collections/WebPages'
+import WikiPages from './collections/WikiPages'
+import RegistryPages from './collections/RegistryPages'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildConfig({
+  admin: {
+    user: Users.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages],
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || '',
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI || '',
+  }),
+  sharp,
+  plugins: [
+    payloadCloudPlugin(),
+    // @ts-ignore - Type safety will be handled at runtime by the plugin
+    cloudStoragePlugin({
+      collections: {
+        media: {
+          // Use our custom adapter for DigitalOcean Spaces with specific configuration
+          adapter: createDigitalOceanAdapter({
+            region: 'ams3',
+            endpoint: 'ams3.digitaloceanspaces.com',
+            bucket: 'yond',
+            prefix: 'tash-payload',
+            // Credentials come from environment variables
+          }),
+          disableLocalStorage: true,
+        },
+      },
+    }),
+  ],
+  cors: [
+    'http://localhost:3000', // Nuxt frontend
+    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
+    // Add your Vercel deployment URLs here for production if needed
+  ],
+  csrf: [
+    'http://localhost:3000', // Nuxt frontend
+    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
+    // Add your Vercel deployment URLs here for production if needed
+  ],
+})
