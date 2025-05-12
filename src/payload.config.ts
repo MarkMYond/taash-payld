@@ -19,6 +19,9 @@ import WikiPages from './collections/WikiPages'
 import RegistryPages from './collections/RegistryPages'
 import { Templates } from './collections/Templates' // Added import
 
+// Import Globals
+import Footer from './globals/Footer'
+
 // Import Blocks
 import ContentBlock from './blocks/ContentBlock';
 import { ImageBlock } from './blocks/ImageBlock';
@@ -75,6 +78,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, Templates], // Added Templates
+  globals: [Footer], // Add the Footer global
   editor: lexicalEditor(),
   blocks: AllBlocks, // Added all blocks
   secret: process.env.PAYLOAD_SECRET || '',
