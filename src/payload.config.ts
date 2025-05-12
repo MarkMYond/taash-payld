@@ -17,6 +17,7 @@ import Categories from './collections/Categories'
 import WebPages from './collections/WebPages'
 import WikiPages from './collections/WikiPages'
 import RegistryPages from './collections/RegistryPages'
+import NavigationCache from './collections/NavigationCache'
 import { Templates } from './collections/Templates' // Added import
 
 // Import Globals
@@ -78,7 +79,7 @@ export default buildConfig({
     },
     // favicon is not a valid property in admin config - removed to fix build error
   },
-  collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, Templates], // Added Templates
+  collections: [Users, Media, Categories, WebPages, WikiPages, RegistryPages, NavigationCache, Templates], // Added NavigationCache
   globals: [Footer], // Add the Footer global
   editor: lexicalEditor(),
   blocks: AllBlocks, // Added all blocks

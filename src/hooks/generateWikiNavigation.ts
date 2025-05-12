@@ -1,7 +1,5 @@
 import { Payload } from 'payload';
 import { Category, WikiPage } from '../payload-types';
-import fs from 'fs';
-import path from 'path';
 
 
 // Interface for navigation items
@@ -31,14 +29,7 @@ export const generateWikiNavigation = async (payload: Payload): Promise<void> =>
   console.log('Generating wiki navigation JSON...');
   
   try {
-    // Define output path for JSON file - place in frontend/public directory
-    const publicPath = path.resolve(process.cwd(), '../frontend/public');
-    const outputFile = path.join(publicPath, 'wiki-navigation.json');
-    
-    // Ensure public directory exists
-    if (!fs.existsSync(publicPath)) {
-      fs.mkdirSync(publicPath, { recursive: true });
-    }
+    // Instead of writing to a file, we'll store the navigation in the database
 
     // Fetch all categories
     const categoriesQuery = buildPayloadQuery({
@@ -87,7 +78,8 @@ export const generateWikiNavigation = async (payload: Payload): Promise<void> =>
                 status: { equals: 'published' },
                 isSectionHomepage: { not_equals: true },
               },
-              limit: 1,
+              sort: 'sort',
+              limit: 100, // Increase limit to fetch all children
             });
             
             const childrenResult = await payload.find({
@@ -96,6 +88,39 @@ export const generateWikiNavigation = async (payload: Payload): Promise<void> =>
             });
             
             const hasChildren = childrenResult.totalDocs > 0;
+            
+            // Process children
+            let children: NavItem[] = [];
+            if (hasChildren) {
+              children = await Promise.all(
+                childrenResult.docs.map(async (childPage: any) => {
+                  // Check if child page has its own children (grandchildren)
+                  const grandchildrenQuery = buildPayloadQuery({
+                    where: {
+                      parent: { equals: childPage.id },
+                      status: { equals: 'published' },
+                    },
+                    limit: 1,
+                  });
+                  
+                  const grandchildrenResult = await payload.find({
+                    collection: 'wiki-pages',
+                    ...grandchildrenQuery,
+                  });
+                  
+                  const hasGrandchildren = grandchildrenResult.totalDocs > 0;
+                  
+                  return {
+                    id: childPage.id,
+                    title: childPage.title,
+                    slug: childPage.slug,
+                    icon: childPage.icon,
+                    hasChildren: hasGrandchildren,
+                    isCategory: false,
+                  };
+                })
+              );
+            }
 
             return {
               id: page.id,
@@ -104,6 +129,7 @@ export const generateWikiNavigation = async (payload: Payload): Promise<void> =>
               icon: page.icon,
               hasChildren,
               isCategory: false,
+              children: children,
             };
           })
         );
@@ -124,9 +150,38 @@ export const generateWikiNavigation = async (payload: Payload): Promise<void> =>
       item => item.isCategory && item.children && item.children.length > 0
     );
 
-    // Write to file
-    fs.writeFileSync(outputFile, JSON.stringify(filteredNavItems, null, 2));
-    console.log(`Wiki navigation generated and saved to ${outputFile}`);
+    // Upsert navigation data to the NavigationCache collection
+    // Using type casting to any to avoid TypeScript errors until types are regenerated
+    const existingCacheEntry = await payload.find({
+      collection: 'navigation-cache' as any,
+      where: {
+        section: { equals: 'wiki' },
+      },
+      limit: 1,
+    });
+
+    if (existingCacheEntry.docs.length > 0) {
+      // Update existing entry
+      await payload.update({
+        collection: 'navigation-cache' as any,
+        id: existingCacheEntry.docs[0].id,
+        data: {
+          navigationData: filteredNavItems,
+        } as any,
+      });
+      console.log(`Wiki navigation updated in MongoDB cache (ID: ${existingCacheEntry.docs[0].id})`);
+    } else {
+      // Create new entry
+      const createdCache = await payload.create({
+        collection: 'navigation-cache' as any,
+        data: {
+          section: 'wiki',
+          navigationData: filteredNavItems,
+          lastGenerated: new Date(),
+        } as any,
+      });
+      console.log(`Wiki navigation saved to MongoDB cache (ID: ${createdCache.id})`);
+    }
 
   } catch (error) {
     console.error('Error generating wiki navigation:', error);

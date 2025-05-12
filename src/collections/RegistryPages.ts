@@ -46,7 +46,6 @@ const RegistryPages: CollectionConfig = {
       required: true,
     },
     slugField('title'),
-    seoField(),
     {
       name: 'category',
       label: 'Category',
@@ -175,6 +174,7 @@ const RegistryPages: CollectionConfig = {
         },
       ],
     },
+    seoField(),
   ],
   timestamps: true,
   versions: false,

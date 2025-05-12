@@ -46,7 +46,6 @@ const WikiPages: CollectionConfig = {
       required: true,
     },
     slugField('title'),
-    seoField(),
     {
       name: 'category',
       label: 'Category',
@@ -175,6 +174,7 @@ const WikiPages: CollectionConfig = {
         },
       ],
     },
+    seoField(),
   ],
   timestamps: true,
   versions: false,

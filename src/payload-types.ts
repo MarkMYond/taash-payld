@@ -94,6 +94,7 @@ export interface Config {
     'web-pages': WebPage;
     'wiki-pages': WikiPage;
     'registry-pages': RegistryPage;
+    'navigation-cache': NavigationCache;
     templates: Template;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -107,6 +108,7 @@ export interface Config {
     'web-pages': WebPagesSelect<false> | WebPagesSelect<true>;
     'wiki-pages': WikiPagesSelect<false> | WikiPagesSelect<true>;
     'registry-pages': RegistryPagesSelect<false> | RegistryPagesSelect<true>;
+    'navigation-cache': NavigationCacheSelect<false> | NavigationCacheSelect<true>;
     templates: TemplatesSelect<false> | TemplatesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -874,6 +876,9 @@ export interface ScheduleCallBlockPayload {
  */
 export interface PricingPlansBlock {
   title?: string | null;
+  mainCtaText?: string | null;
+  mainCtaLink?: string | null;
+  mainCtaStyle?: ('primary' | 'secondary') | null;
   sectionBackgroundColor?: ('white' | 'light-grey' | 'brand-50' | 'brand-900' | 'brand-primary') | null;
   removeTopPadding?: boolean | null;
   removeBottomPadding?: boolean | null;
@@ -1266,35 +1271,6 @@ export interface WikiPage {
    * A unique identifier for the page, used in the URL.
    */
   slug: string;
-  /**
-   * Optimize your page for search engines and social sharing.
-   */
-  meta?: {
-    /**
-     * Custom title for search engines. If blank, the page title will be used.
-     */
-    title?: string | null;
-    /**
-     * Brief description of this page for search results and social sharing.
-     */
-    description?: string | null;
-    /**
-     * Image used when sharing this page on social media (1200×630px recommended).
-     */
-    image?: (string | null) | Media;
-    /**
-     * If checked, this page will not be indexed by search engines.
-     */
-    noIndex?: boolean | null;
-    /**
-     * The type of content this page represents (for structured data).
-     */
-    schemaType?: ('Article' | 'WebPage' | 'FAQPage' | 'Product' | 'Service' | 'Organization') | null;
-    /**
-     * Comma-separated keywords (optional).
-     */
-    keywords?: string | null;
-  };
   category?: (string | null) | Category;
   pageBuilder: ContentBlock[];
   status: 'draft' | 'published';
@@ -1311,22 +1287,44 @@ export interface WikiPage {
    * Optional icon name for navigation display.
    */
   icon?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Pages for the registry section.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registry-pages".
- */
-export interface RegistryPage {
-  id: string;
-  title: string;
-  /**
-   * A unique identifier for the page, used in the URL.
-   */
-  slug: string;
+  backgroundSettings?: {
+    /**
+     * Optional background image for the page.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Select a background color for the header area.
+     */
+    backgroundOverlay?:
+      | (
+          | 'default-gradient'
+          | 'primary-25'
+          | 'primary-50'
+          | 'primary-100'
+          | 'primary-200'
+          | 'primary-300'
+          | 'primary-400'
+          | 'primary-500'
+          | 'primary-600'
+          | 'primary-700'
+          | 'primary-800'
+          | 'primary-900'
+          | 'primary-950'
+          | 'sand'
+          | 'pink-light'
+          | 'coral-light'
+          | 'pink-mid'
+          | 'purple-light'
+          | 'blue-light'
+          | 'aqua-light'
+          | 'green-light'
+          | 'light-green'
+          | 'grass-light'
+          | 'light-grey'
+          | 'navy-dark'
+        )
+      | null;
+  };
   /**
    * Optimize your page for search engines and social sharing.
    */
@@ -1356,6 +1354,22 @@ export interface RegistryPage {
      */
     keywords?: string | null;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Pages for the registry section.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registry-pages".
+ */
+export interface RegistryPage {
+  id: string;
+  title: string;
+  /**
+   * A unique identifier for the page, used in the URL.
+   */
+  slug: string;
   category?: (string | null) | Category;
   pageBuilder: ContentBlock[];
   status: 'draft' | 'published';
@@ -1372,6 +1386,98 @@ export interface RegistryPage {
    * Optional icon name for navigation display.
    */
   icon?: string | null;
+  backgroundSettings?: {
+    /**
+     * Optional background image for the page.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Select a background color for the header area.
+     */
+    backgroundOverlay?:
+      | (
+          | 'default-gradient'
+          | 'primary-25'
+          | 'primary-50'
+          | 'primary-100'
+          | 'primary-200'
+          | 'primary-300'
+          | 'primary-400'
+          | 'primary-500'
+          | 'primary-600'
+          | 'primary-700'
+          | 'primary-800'
+          | 'primary-900'
+          | 'primary-950'
+          | 'sand'
+          | 'pink-light'
+          | 'coral-light'
+          | 'pink-mid'
+          | 'purple-light'
+          | 'blue-light'
+          | 'aqua-light'
+          | 'green-light'
+          | 'light-green'
+          | 'grass-light'
+          | 'light-grey'
+          | 'navy-dark'
+        )
+      | null;
+  };
+  /**
+   * Optimize your page for search engines and social sharing.
+   */
+  meta?: {
+    /**
+     * Custom title for search engines. If blank, the page title will be used.
+     */
+    title?: string | null;
+    /**
+     * Brief description of this page for search results and social sharing.
+     */
+    description?: string | null;
+    /**
+     * Image used when sharing this page on social media (1200×630px recommended).
+     */
+    image?: (string | null) | Media;
+    /**
+     * If checked, this page will not be indexed by search engines.
+     */
+    noIndex?: boolean | null;
+    /**
+     * The type of content this page represents (for structured data).
+     */
+    schemaType?: ('Article' | 'WebPage' | 'FAQPage' | 'Product' | 'Service' | 'Organization') | null;
+    /**
+     * Comma-separated keywords (optional).
+     */
+    keywords?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Navigation data cache for different sections of the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation-cache".
+ */
+export interface NavigationCache {
+  id: string;
+  section: 'wiki' | 'registry';
+  /**
+   * JSON structure of the navigation (automatically generated)
+   */
+  navigationData:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  lastGenerated?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1405,6 +1511,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registry-pages';
         value: string | RegistryPage;
+      } | null)
+    | ({
+        relationTo: 'navigation-cache';
+        value: string | NavigationCache;
       } | null)
     | ({
         relationTo: 'templates';
@@ -1971,6 +2081,9 @@ export interface ScheduleCallBlockPayloadSelect<T extends boolean = true> {
  */
 export interface PricingPlansBlockSelect<T extends boolean = true> {
   title?: T;
+  mainCtaText?: T;
+  mainCtaLink?: T;
+  mainCtaStyle?: T;
   sectionBackgroundColor?: T;
   removeTopPadding?: T;
   removeBottomPadding?: T;
@@ -2036,16 +2149,6 @@ export interface TravelersBlockSelect<T extends boolean = true> {
 export interface WikiPagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noIndex?: T;
-        schemaType?: T;
-        keywords?: T;
-      };
   category?: T;
   pageBuilder?:
     | T
@@ -2057,6 +2160,22 @@ export interface WikiPagesSelect<T extends boolean = true> {
   isSectionHomepage?: T;
   parent?: T;
   icon?: T;
+  backgroundSettings?:
+    | T
+    | {
+        backgroundImage?: T;
+        backgroundOverlay?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noIndex?: T;
+        schemaType?: T;
+        keywords?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2067,16 +2186,6 @@ export interface WikiPagesSelect<T extends boolean = true> {
 export interface RegistryPagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noIndex?: T;
-        schemaType?: T;
-        keywords?: T;
-      };
   category?: T;
   pageBuilder?:
     | T
@@ -2088,6 +2197,33 @@ export interface RegistryPagesSelect<T extends boolean = true> {
   isSectionHomepage?: T;
   parent?: T;
   icon?: T;
+  backgroundSettings?:
+    | T
+    | {
+        backgroundImage?: T;
+        backgroundOverlay?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noIndex?: T;
+        schemaType?: T;
+        keywords?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation-cache_select".
+ */
+export interface NavigationCacheSelect<T extends boolean = true> {
+  section?: T;
+  navigationData?: T;
+  lastGenerated?: T;
   updatedAt?: T;
   createdAt?: T;
 }
