@@ -115,8 +115,12 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    footer: Footer;
+  };
+  globalsSelect: {
+    footer: FooterSelect<false> | FooterSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -2134,6 +2138,89 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  logo?: (string | null) | Media;
+  tagline?: string | null;
+  linkColumns?:
+    | {
+        title: string;
+        links?:
+          | {
+              text: string;
+              url: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  subscribePlaceholder?: string | null;
+  socialLinks?:
+    | {
+        /**
+         * Enter the Phosphor Icon name (e.g., TwitterLogo, LinkedinLogo). Do not include "Ph".
+         */
+        iconName: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyright: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  logo?: T;
+  tagline?: T;
+  linkColumns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              text?: T;
+              url?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  subscribePlaceholder?: T;
+  socialLinks?:
+    | T
+    | {
+        iconName?: T;
+        url?: T;
+        id?: T;
+      };
+  copyright?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

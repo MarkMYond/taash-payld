@@ -113,6 +113,8 @@ export default buildConfig({
     process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
     'https://taash-payld.vercel.app', // The backend itself
     'https://fetest-bay.vercel.app', // The fetest frontend
+    'https://frontend-cyan-nine-80.vercel.app', // New frontend deployment
+    '*', // Allow all origins - remove in production
     // Add your Vercel deployment URLs here for production if needed
   ],
   csrf: [
@@ -120,6 +122,7 @@ export default buildConfig({
     process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3333', // Payload admin UI itself
     'https://taash-payld.vercel.app', // The backend itself
     'https://fetest-bay.vercel.app', // The fetest frontend
+    'https://frontend-cyan-nine-80.vercel.app', // New frontend deployment
     // Add your Vercel deployment URLs here for production if needed
   ],
 })
