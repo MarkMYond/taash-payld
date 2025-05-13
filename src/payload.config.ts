@@ -116,6 +116,7 @@ export default buildConfig({
     'https://taash-payld.vercel.app', // The backend itself
     'https://fetest-bay.vercel.app', // The fetest frontend
     'https://frontend-cyan-nine-80.vercel.app', // New frontend deployment
+    'https://taash.ai', // New frontend domain
     '*', // Allow all origins - remove in production
     // Add your Vercel deployment URLs here for production if needed
   ],
@@ -125,6 +126,7 @@ export default buildConfig({
     'https://taash-payld.vercel.app', // The backend itself
     'https://fetest-bay.vercel.app', // The fetest frontend
     'https://frontend-cyan-nine-80.vercel.app', // New frontend deployment
+    'https://taash.ai', // New frontend domain
     // Add your Vercel deployment URLs here for production if needed
   ],
 })
